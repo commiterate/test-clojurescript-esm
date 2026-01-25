@@ -1,0 +1,23 @@
+# macOS.
+.DS_Store
+
+# direnv.
+.direnv
+
+# Sublime Text.
+.lsp
+*.sublime-*
+
+# JetBrains.
+.idea
+*.iml
+
+# Build.
+.clj-kondo
+.cpcache
+.nrepl-port
+.shadow-cljs
+node_modules
+outputs
+bun.lock
+package.json

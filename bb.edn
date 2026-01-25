@@ -1,0 +1,83 @@
+;;;
+;;; Babashka configuration.
+;;;
+;;; https://book.babashka.org#project-setup
+;;;
+{:tasks
+ {clean
+  {:doc
+   "Remove outputs."
+   :task
+   ; Remove outputs.
+   (shell "rm -rf node_modules outputs package.json")}
+
+  analyze
+  {:doc
+   "Run static analysis (format, lint)."
+   :task
+   (do
+     ; Format.
+     (shell "treefmt")
+     ; Lint Clojure.
+     (shell (str "clj-kondo --lint " (with-out-str (clojure "-Spath")) " --copy-configs --dependencies --parallel")))}
+
+  cljs
+  {:doc
+   "Build ClojureScript."
+   :requires
+   ([cheshire.core :as cheshire])
+   :task
+   (do
+     ; Remove outputs.
+     (shell "rm -rf node_modules outputs/main/cljs package.json")
+     ; Create `package.json`.
+     (spit
+       "package.json"
+       (cheshire/generate-string
+         {; Runtime.
+          :name
+          "test-clojurescript-esm"
+          :type
+          "module"
+          :exports
+          {"."
+           "./"}
+          ; Package manager.
+          :dependencies
+          {}
+          :devDependencies
+          {}
+          :private
+          true}
+         {:pretty
+          true}))
+     ; Install JavaScript dependencies.
+     (shell "bun install")
+     ; Add ClojureScript main JavaScript dependencies.
+     (clojure "-M:cljs npm-deps main")
+     ; Compile ClojureScript.
+     (clojure "-M:cljs release main")
+     ; Create `outputs/main/cljs/package.json`.
+     (spit
+       "outputs/main/cljs/package.json"
+       (cheshire/generate-string
+         {; Runtime.
+          :name
+          "_clojure"
+          :type
+          "module"
+          ; Package manager.
+          :private
+          true}
+         {:pretty
+          true}))
+     ; Add ClojureScript main JavaScript.
+     (shell "bun add --dev file:outputs/main/cljs"))}
+
+  build
+  {:doc
+   "Build everything."
+   :depends
+   [clean
+    analyze
+    cljs]}}}

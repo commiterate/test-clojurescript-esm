@@ -1,0 +1,21 @@
+;;;
+;;; Clojure path configuration.
+;;;
+;;; https://clojure.org/reference/deps_edn
+;;;
+{:paths
+ ["inputs/main/clojure"]
+
+ :deps
+ {org.mentat/emmy
+  {:mvn/version "0.32.0"}}
+
+ :aliases
+ {:cljs
+  {:extra-deps
+   {thheller/shadow-cljs
+    {:mvn/version "3.3.5"}}
+
+   :main-opts
+   ["--main"
+    "shadow.cljs.devtools.cli"]}}}

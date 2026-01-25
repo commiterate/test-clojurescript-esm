@@ -1,0 +1,32 @@
+;;;
+;;; shadow-cljs configuration.
+;;;
+;;; https://shadow-cljs.github.io/docs/UsersGuide#config
+;;;
+{:deps
+ {:aliases
+  [:cljs]}
+
+ :node-modules
+ {:managed-by
+  :bun
+
+  :install-cmd
+  ["bun"
+   "add"
+   "--dev"]}
+
+ :builds
+ {:main
+  {:target
+   :esm-files
+
+   :output-dir
+   "outputs/main/cljs"
+
+   :entries
+   [test-clojurescript-esm.ohms-law]
+
+   :js-options
+   {:js-provider
+    :import}}}}
