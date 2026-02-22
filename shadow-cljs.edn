@@ -9,12 +9,7 @@
 
  :node-modules
  {:managed-by
-  :bun
-
-  :install-cmd
-  ["bun"
-   "add"
-   "--dev"]}
+  :npm}
 
  :builds
  {:main

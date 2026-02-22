@@ -13,11 +13,9 @@
 *.iml
 
 # Build.
-.clj-kondo
 .cpcache
-.nrepl-port
 .shadow-cljs
 node_modules
 outputs
-bun.lock
 package.json
+package-lock.json

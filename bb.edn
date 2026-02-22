@@ -11,16 +11,6 @@
    ; Remove outputs.
    (shell "rm -rf node_modules outputs package.json")}
 
-  analyze
-  {:doc
-   "Run static analysis (format, lint)."
-   :task
-   (do
-     ; Format.
-     (shell "treefmt")
-     ; Lint Clojure.
-     (shell (str "clj-kondo --lint " (with-out-str (clojure "-Spath")) " --copy-configs --dependencies --parallel")))}
-
   cljs
   {:doc
    "Build ClojureScript."
@@ -52,7 +42,7 @@
          {:pretty
           true}))
      ; Install JavaScript dependencies.
-     (shell "bun install")
+     (shell "npm install")
      ; Add ClojureScript main JavaScript dependencies.
      (clojure "-M:cljs npm-deps main")
      ; Compile ClojureScript.
@@ -63,7 +53,7 @@
        (cheshire/generate-string
          {; Runtime.
           :name
-          "_clojure"
+          "clojure"
           :type
           "module"
           ; Package manager.
@@ -72,12 +62,11 @@
          {:pretty
           true}))
      ; Add ClojureScript main JavaScript.
-     (shell "bun add --dev file:outputs/main/cljs"))}
+     (shell "npm install --save-dev file:outputs/main/cljs"))}
 
   build
   {:doc
    "Build everything."
    :depends
    [clean
-    analyze
     cljs]}}}

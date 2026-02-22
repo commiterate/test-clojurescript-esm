@@ -59,16 +59,11 @@
             git
             # Babashka.
             babashka
-            # Treefmt.
-            treefmt
             # Java.
             jdk21
             # Clojure.
             clojure
-            cljfmt
-            clj-kondo
             # JavaScript.
-            bun
             nodejs
           ];
 

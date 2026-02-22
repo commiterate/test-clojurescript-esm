@@ -1,5 +1,5 @@
-// Emit compiled CLJS into a local `_clojure` module.
-import { I_js, R_js, V_js } from "_clojure/test-clojurescript-esm.ohms-law.js";
+// Emit compiled CLJS into a local `clojure` module.
+import { I_js, R_js, V_js } from "clojure/test-clojurescript-esm.ohms-law.js";
 
 console.log(I_js({V: 4, R: 1}));
 console.log(R_js({I: 3, V: 9}));
