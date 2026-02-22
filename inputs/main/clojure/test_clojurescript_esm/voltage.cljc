@@ -6,5 +6,6 @@
        [clojure.spec.alpha :as spec])
     [emmy.value :as v]))
 
-(spec/def ::V
-  v/number?)
+(def V-spec
+  (spec/def ::V
+    v/number?))

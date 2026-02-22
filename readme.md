@@ -93,9 +93,9 @@ node inputs/main/javascript/main.js
 
 ## Notes
 
-### Advanced Optimization Accidentally Removes "Unused" Imports Providing Specs
+### Advanced Optimization Accidentally Removes "Unused" Imports Providing Multimethod Implementations
 
-Advanced optimizations remove "unused" imports despite the imported namespaces registering specs. In this test project, the current + voltage + resistance namespaces only provide specs which are used by the Ohm's law namespace.
+Advanced optimizations remove "unused" imports despite the imported namespaces registering multimethod implementations. In this test project, the `emmy.numbers` namespace only provides multimethod implementations for `emmy.generic` multimethods which are used by the Ohm's law namespace.
 
 Compiled CLJS executes fine with unoptimized builds (change `bb.edn` from `(clojure "-M:cljs release main")` → `(clojure "-M:cljs compile main")`):
 
@@ -107,23 +107,26 @@ Compiled CLJS executes fine with unoptimized builds (change `bb.edn` from `(cloj
 10
 ```
 
-It complains about missing specs with advanced optimization:
+It complains about missing multimethod implementations with advanced optimization:
 
 `node inputs/main/javascript/main.js`
 
 ```text
-file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.spec.alpha.js:14
-vm=function(a){var b=um(a);if($APP.m(b))return b;if($APP.Wd(a))throw Error("Unable to resolve spec: "+$APP.X.g(a));return null};wm=function(a){if($APP.Ja(a==null?"":String(a)))return null;a=$APP.th.h($APP.Fl,$APP.Ll(a,"$"));if(2<=$APP.z(a)&&$APP.ze(function(c){return!$APP.Ja(c==null?"":String(c))},a)){var b=$APP.Dl($APP.El,$APP.tl)(a);a=$APP.D(b,0,null);b=$APP.D(b,1,null);return $APP.Q.g(""+$APP.X.g($APP.Kl(".",a))+"/"+$APP.X.g(b))}return null};$APP.ym=function(a){return $APP.Td($APP.xm,a)};
-                                                                     ^
+file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.core.js:123
+eh=function(a,b){throw Error(["No method in multimethod '",$APP.$a(a),"' for dispatch value: ",$APP.$a(b)].join(""));};$APP.gh=function(a,b,c,d,e,f,g){var h=$APP.fh;this.name=a;this.M=b;this.be=h;this.xc=c;this.Bc=d;this.ye=e;this.Ac=f;this.qc=g;this.o=4194305;this.K=4352};$APP.W=function(a,b,c){$APP.ah.B(a.Bc,$APP.U,b,c);bh(a.Ac,a.Bc,a.qc,a.xc)};
+                       ^
 
-Error: Unable to resolve spec: :test-clojurescript-esm.current/I
-    at vm (file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.spec.alpha.js:14:70)
-    at Pm (file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.spec.alpha.js:19:106)
-    at $APP.Im (file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.spec.alpha.js:18:429)
-    at file:///workplace/test-clojurescript-esm/outputs/main/cljs/test-clojurescript-esm.ohms-law.js:26:190
+Error: No method in multimethod 'emmy.generic/one?' for dispatch value: [:emmy.value/native-integral]
+    at eh (file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.core.js:123:24)
+    at $APP.l.g (file:///workplace/test-clojurescript-esm/outputs/main/cljs/cljs.core.js:372:449)
+    at $APP.DG.h (file:///workplace/test-clojurescript-esm/outputs/main/cljs/emmy.generic.js:51:456)
+    at I_js (file:///workplace/test-clojurescript-esm/outputs/main/cljs/test-clojurescript-esm.ohms-law.js:37:111)
+    at file:///workplace/test-clojurescript-esm/inputs/main/javascript/main.js:4:13
     at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
 
 Node.js v22.21.1
 ```
+
+Manually adding back `import "./emmy.numbers.js";` to `outputs/main/cljs/test-clojurescript-esm.ohms-law.js` fixes this.

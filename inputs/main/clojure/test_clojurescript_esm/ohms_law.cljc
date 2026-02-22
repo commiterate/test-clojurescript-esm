@@ -11,11 +11,12 @@
     [test-clojurescript-esm.voltage :as voltage]))
 
 ; I = V/R
-(spec/fdef I
-  :args (spec/cat
-          :keys
-          (spec/keys* :req-un [::resistance/R ::voltage/V]))
-  :ret ::current/I)
+(def I-fspec
+  (spec/fdef I
+    :args (spec/cat
+            :keys
+            (spec/keys* :req-un [resistance/R-spec voltage/V-spec]))
+    :ret current/I-spec))
 
 (defn I
   [& {:keys [R V]}]
@@ -27,11 +28,12 @@
      (I (js->clj opts :keywordize-keys true))))
 
 ; R = V/I
-(spec/fdef R
-  :args (spec/cat
-          :keys
-          (spec/keys* :req-un [::current/I ::voltage/V]))
-  :ret ::resistance/R)
+(def R-fspec
+  (spec/fdef R
+    :args (spec/cat
+            :keys
+            (spec/keys* :req-un [current/I-spec voltage/V-spec]))
+    :ret resistance/R-spec))
 
 (defn R
   [& {:keys [I V]}]
@@ -43,11 +45,12 @@
      (R (js->clj opts :keywordize-keys true))))
 
 ; V = IR
-(spec/fdef V
-  :args (spec/cat
-          :keys
-          (spec/keys* :req-un [::current/I ::resistance/R]))
-  :ret ::voltage/V)
+(def V-fspec
+  (spec/fdef V
+    :args (spec/cat
+            :keys
+            (spec/keys* :req-un [current/I-spec resistance/R-spec]))
+    :ret voltage/V-spec))
 
 (defn V
   [& {:keys [I R]}]
